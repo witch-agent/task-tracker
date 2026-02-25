@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروژه‌های من</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f14;
+            --surface: #1a1a24;
+            --surface-elevated: #252532;
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --text: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: #3f3f46;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Project Card */
+        .project {
+            background: var(--surface);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .project-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .project-header:hover {
+            background: var(--surface-elevated);
+        }
+
+        .project-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-title .icon {
+            font-size: 18px;
+        }
+
+        .project-title span {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .icon-btn:hover {
+            background: var(--surface-elevated);
+            color: var(--text);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--danger);
+        }
+
+        /* Category */
+        .categories {
+            padding: 0 16px 16px;
+            display: none;
+        }
+
+        .project.expanded .categories {
+            display: block;
+        }
+
+        .category {
+            margin-bottom: 12px;
+            padding-right: 28px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .small-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .small-btn:hover {
+            background: var(--surface-elevated);
+            color: var(--text);
+        }
+
+        .small-btn.delete:hover {
+            color: var(--danger);
+        }
+
+        /* Tasks */
+        .tasks {
+            padding-right: 8px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+
+        .task.completed {
+            opacity: 0.5;
+        }
+
+        .task.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            border-color: var(--primary);
+        }
+
+        .task.completed .task-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .task-delete {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .task:hover .task-delete {
+            opacity: 1;
+        }
+
+        .task-delete:hover {
+            color: var(--danger);
+        }
+
+        /* Add Forms */
+        .add-form {
+            display: none;
+            padding: 12px;
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .add-form.show {
+            display: block;
+        }
+
+        .add-form input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .add-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .add-form-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .add-form-buttons button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .confirm-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        /* Empty State */
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* Completed tasks toggle */
+        .completed-toggle {
+            text-align: center;
+            padding: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .completed-tasks {
+            display: none;
+        }
+
+        .show-completed .completed-tasks {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 پروژه‌های من</h1>
+            <button class="add-btn" onclick="showAddProject()">
+                <span>+</span> پروژه جدید
+            </button>
+        </div>
+
+        <div id="projects        <!--List"></div>
+
+ Add Project Form -->
+        <div class="add-form" id="addProjectForm">
+            <input type="text" id="newProjectName" placeholder="اسم پروژه...">
+            <div class="add-form-buttons">
+                <button class="confirm-btn" onclick="addProject()">اضافه کن</button>
+                <button class="cancel-btn" onclick="hideAddProject()">لغو</button>
+            </div>
+        </div>
+
+        <!-- Add Category Form -->
+        <div class="add-form" id="addCategoryForm">
+            <input type="text" id="newCategoryName" placeholder="اسم دسته...">
+            <input type="hidden" id="currentProjectId">
+            <div class="add-form-buttons">
+                <button class="confirm-btn" onclick="addCategory()">اضافه کن</button>
+                <button class="cancel-btn" onclick="hideAddCategory()">لغو</button>
+            </div>
+        </div>
+
+        <!-- Add Task Form -->
+        <div class="add-form" id="addTaskForm">
+            <input type="text" id="newTaskName" placeholder="تسک جدید...">
+            <input type="hidden" id="currentCategoryId">
+            <div class="add-form-buttons">
+                <button class="confirm-btn" onclick="addTask()">اضافه کن</button>
+                <button class="cancel-btn" onclick="hideAddTask()">لغو</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Structure
+        let data = JSON.parse(localStorage.getItem('myProjects')) || [];
+
+        function save() {
+            localStorage.setItem('myProjects', JSON.stringify(data));
+            render();
+        }
+
+        function render() {
+            const container = document.getElementById('projectsList');
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty">
+                        <div class="empty-icon">📝</div>
+                        <p>هنوز پروژه‌ای نداری</p>
+                        <p style="font-size: 12px; margin-top: 8px;">اولین پروژه رو بساز</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.map((project, pIndex) => `
+                <div class="project ${project.expanded ? 'expanded' : ''}" data-pid="${pIndex}">
+                    <div class="project-header" onclick="toggleProject(${pIndex})">
+                        <div class="project-title">
+                            <span class="icon">📁</span>
+                            <span>${project.name}</span>
+                            <span style="color: var(--text-muted); font-size: 12px;">(${countTasks(pIndex)} تسک)</span>
+                        </div>
+                        <div class="project-actions" onclick="event.stopPropagation()">
+                            <button class="icon-btn" onclick="showAddCategory(${pIndex})" title="دسته جدید">➕</button>
+                            <button class="icon-btn delete" onclick="deleteProject(${pIndex})" title="حذف">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="categories">
+                        ${project.categories.map((category, cIndex) => `
+                            <div class="category">
+                                <div class="category-header">
+                                    <span class="category-name">${category.name}</span>
+                                    <div class="category-actions">
+                                        <button class="small-btn" onclick="showAddTask(${pIndex}, ${cIndex})">➕ تسک</button>
+                                        <button class="small-btn delete" onclick="deleteCategory(${pIndex}, ${cIndex})">حذف</button>
+                                    </div>
+                                </div>
+                                <div class="tasks">
+                                    ${category.tasks.map((task, tIndex) => `
+                                        <div class="task ${task.completed ? 'completed' : ''}" data-pid="${pIndex}" data-cid="${cIndex}" data-tid="${tIndex}">
+                                            <div class="task-checkbox" onclick="toggleTask(${pIndex}, ${cIndex}, ${tIndex})">
+                                                ${task.completed ? '✓' : ''}
+                                            </div>
+                                            <span class="task-text">${task.name}</span>
+                                            <button class="task-delete" onclick="deleteTask(${pIndex}, ${cIndex}, ${tIndex})">✕</button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function countTasks(pIndex) {
+            const project = data[pIndex];
+            let count = 0;
+            project.categories.forEach(cat => {
+                count += cat.tasks.length;
+            });
+            return count;
+        }
+
+        function toggleProject(index) {
+            data[index].expanded = !data[index].expanded;
+            save();
+        }
+
+        // Project
+        function showAddProject() {
+            document.getElementById('addProjectForm').classList.add('show');
+            document.getElementById('newProjectName').focus();
+        }
+
+        function hideAddProject() {
+            document.getElementById('addProjectForm').classList.remove('show');
+            document.getElementById('newProjectName').value = '';
+        }
+
+        function addProject() {
+            const name = document.getElementById('newProjectName').value.trim();
+            if (!name) return;
+            
+            data.push({
+                name: name,
+                expanded: true,
+                categories: []
+            });
+            save();
+            hideAddProject();
+        }
+
+        function deleteProject(index) {
+            if (confirm('پروژه حذف شود؟')) {
+                data.splice(index, 1);
+                save();
+            }
+        }
+
+        // Category
+        function showAddCategory(pIndex) {
+            document.getElementById('currentProjectId').value = pIndex;
+            document.getElementById('addCategoryForm').classList.add('show');
+            document.getElementById('newCategoryName').focus();
+        }
+
+        function hideAddCategory() {
+            document.getElementById('addCategoryForm').classList.remove('show');
+            document.getElementById('newCategoryName').value = '';
+            document.getElementById('currentProjectId').value = '';
+        }
+
+        function addCategory() {
+            const name = document.getElementById('newCategoryName').value.trim();
+            const pIndex = document.getElementById('currentProjectId').value;
+            
+            if (!name || pIndex === '') return;
+            
+            data[pIndex].categories.push({
+                name: name,
+                tasks: []
+            });
+            data[pIndex].expanded = true;
+            save();
+            hideAddCategory();
+        }
+
+        function deleteCategory(pIndex, cIndex) {
+            if (confirm('دسته حذف شود؟')) {
+                data[pIndex].categories.splice(cIndex, 1);
+                save();
+            }
+        }
+
+        // Task
+        function showAddTask(pIndex, cIndex) {
+            document.getElementById('currentCategoryId').value = `${pIndex}-${cIndex}`;
+            document.getElementById('addTaskForm').classList.add('show');
+            document.getElementById('newTaskName').focus();
+        }
+
+        function hideAddTask() {
+            document.getElementById('addTaskForm').classList.remove('show');
+            document.getElementById('newTaskName').value = '';
+            document.getElementById('currentCategoryId').value = '';
+        }
+
+        function addTask() {
+            const name = document.getElementById('newTaskName').value.trim();
+            const ids = document.getElementById('currentCategoryId').value.split('-');
+            
+            if (!name || ids.length !== 2) return;
+            
+            const [pIndex, cIndex] = ids.map(Number);
+            data[pIndex].categories[cIndex].tasks.push({
+                name: name,
+                completed: false
+            });
+            save();
+            hideAddTask();
+        }
+
+        function toggleTask(pIndex, cIndex, tIndex) {
+            data[pIndex].categories[cIndex].tasks[tIndex].completed = 
+                !data[pIndex].categories[cIndex].tasks[tIndex].completed;
+            save();
+        }
+
+        function deleteTask(pIndex, cIndex, tIndex) {
+            data[pIndex].categories[cIndex].tasks.splice(tIndex, 1);
+            save();
+        }
+
+        // Initialize
+        render();
+    </script>
+</body>
+</html>
