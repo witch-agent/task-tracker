@@ -428,9 +428,10 @@
                         ${project.categories.map((category, cIndex) => `
                             <div class="category">
                                 <div class="category-header">
-                                    <span class="category-name">${category.name}</span>
+                                    <span class="category-name" ondblclick="renameCategory(${pIndex}, ${cIndex})">${category.name}</span>
                                     <div class="category-actions">
                                         <button class="small-btn" onclick="showAddTask(${pIndex}, ${cIndex})">➕ تسک</button>
+                                        <button class="small-btn" onclick="renameCategory(${pIndex}, ${cIndex})">✏️</button>
                                         <button class="small-btn delete" onclick="deleteCategory(${pIndex}, ${cIndex})">حذف</button>
                                     </div>
                                 </div>
@@ -528,6 +529,14 @@
         function deleteCategory(pIndex, cIndex) {
             if (confirm('دسته حذف شود؟')) {
                 data[pIndex].categories.splice(cIndex, 1);
+                save();
+            }
+        }
+
+        function renameCategory(pIndex, cIndex) {
+            const newName = prompt('اسم جدید:', data[pIndex].categories[cIndex].name);
+            if (newName && newName.trim()) {
+                data[pIndex].categories[cIndex].name = newName.trim();
                 save();
             }
         }
