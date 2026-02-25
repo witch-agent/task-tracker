@@ -342,9 +342,18 @@
     <div class="container">
         <div class="header">
             <h1>📋 پروژه‌های من</h1>
-            <button class="add-btn" onclick="showAddProject()">
-                <span>+</span> پروژه جدید
-            </button>
+            <div style="display: flex; gap: 8px;">
+                <button class="add-btn" onclick="exportData()" style="background: var(--surface-elevated);">
+                    <span>💾</span> خروجی
+                </button>
+                <button class="add-btn" onclick="document.getElementById('importFile').click()" style="background: var(--surface-elevated);">
+                    <span>📂</span> ورودی
+                </button>
+                <input type="file" id="importFile" accept=".json" onchange="importData(this)" style="display: none;">
+                <button class="add-btn" onclick="showAddProject()">
+                    <span>+</span> پروژه جدید
+                </button>
+            </div>
         </div>
 
         <div id="projectsList"></div>
@@ -564,6 +573,41 @@
 
         // Initialize
         render();
+
+        // Export/Import Functions
+        function exportData() {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my-projects-' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        data = imported;
+                        save();
+                        alert('✅ اطلاعات با موفقیت وارد شد!');
+                    } else {
+                        alert('❌ فرمت فایل اشتباه است');
+                    }
+                } catch(err) {
+                    alert('❌ خطا در خوندن فایل');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
     </script>
 </body>
 </html>
