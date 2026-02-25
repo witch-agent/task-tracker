@@ -421,6 +421,7 @@
                         </div>
                         <div class="project-actions" onclick="event.stopPropagation()">
                             <button class="icon-btn" onclick="showAddCategory(${pIndex})" title="دسته جدید">➕</button>
+                            <button class="icon-btn" onclick="renameProject(${pIndex})" title="ویرایش">✏️</button>
                             <button class="icon-btn delete" onclick="deleteProject(${pIndex})" title="حذف">🗑️</button>
                         </div>
                     </div>
@@ -494,6 +495,14 @@
         function deleteProject(index) {
             if (confirm('پروژه حذف شود؟')) {
                 data.splice(index, 1);
+                save();
+            }
+        }
+
+        function renameProject(index) {
+            const newName = prompt('اسم جدید پروژه:', data[index].name);
+            if (newName && newName.trim()) {
+                data[index].name = newName.trim();
                 save();
             }
         }
